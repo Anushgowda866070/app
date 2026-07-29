@@ -1,6 +1,6 @@
 package com.payment.server;
 
-import com.payment.servlet.PaymentServlet;
+import com.payment.servlet.*;
 import com.sun.net.httpserver.HttpServer;
 
 import java.net.InetSocketAddress;
@@ -11,7 +11,10 @@ public class App {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
-        server.createContext("/sale", new PaymentServlet());
+        server.createContext("/sale", new SalesServlet());
+        server.createContext("/refund", new RefundServlet());
+        server.createContext("/verify", new VerifyServlet());
+        server.createContext("/void", new VoidServlet());
 
         server.setExecutor(null);
 
