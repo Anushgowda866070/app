@@ -29,7 +29,20 @@ public class VerifyServlet implements HttpHandler {
 
         System.out.println("Response from gateway :" + response);
 
-        exchange.sendResponseHeaders(200, response.getBytes().length);
+        int statusCode;
+
+        if (response.contains("Successful")) {
+            statusCode = 200;
+        } else if (response.contains("Transaction Not Found")) {
+            statusCode = 404;
+        } else {
+            statusCode = 400;
+        }
+
+        exchange.sendResponseHeaders(
+                statusCode,
+                response.getBytes().length
+        );
 
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
