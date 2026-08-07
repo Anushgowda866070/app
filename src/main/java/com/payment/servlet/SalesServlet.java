@@ -31,7 +31,7 @@ public class SalesServlet implements HttpHandler {
 
         int statusCode;
 
-        if (response.contains("Successful")) {
+        if (response.contains("\"responseCode\":\"00\"")) {
             statusCode = 200;
         } else if (response.contains("Transaction Not Found")) {
             statusCode = 404;
