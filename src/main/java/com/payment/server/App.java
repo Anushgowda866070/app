@@ -11,10 +11,10 @@ public class App {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
-        server.createContext("/sale", new SalesServlet());
-        server.createContext("/refund", new RefundServlet());
-        server.createContext("/verify", new VerifyServlet());
-        server.createContext("/void", new VoidServlet());
+        server.createContext("/sale", new Servlet());
+        server.createContext("/refund", new Servlet());
+        server.createContext("/verify", new Servlet());
+        server.createContext("/void", new Servlet());
 
         server.setExecutor(null);
 

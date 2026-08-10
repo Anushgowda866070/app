@@ -11,10 +11,10 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
-public abstract class AbstractServlet implements HttpHandler {
+public class Servlet implements HttpHandler {
 
     private static final Logger LOGGER =
-            Logger.getLogger(AbstractServlet.class.getName());
+            Logger.getLogger(Servlet.class.getName());
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
