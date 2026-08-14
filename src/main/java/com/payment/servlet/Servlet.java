@@ -22,38 +22,44 @@ public class Servlet implements HttpHandler {
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
                         exchange.getRequestBody(),
-                        StandardCharsets.UTF_8
-                )
-        );
-
+                        StandardCharsets.UTF_8));
         StringBuilder requestBody = new StringBuilder();
         String line;
 
         while ((line = reader.readLine()) != null) {
             requestBody.append(line);
         }
-
         LOGGER.info("Request received from client");
 
-        GatewaySocketClient gatewaySocketClient =
-                new GatewaySocketClient();
+        GatewaySocketClient gatewaySocketClient = new GatewaySocketClient();
+        String response;
+        int statusCode;
+        try {
+            response = gatewaySocketClient.sendRequest(
+                    requestBody.toString());
 
-        String response = gatewaySocketClient.sendRequest(
-                requestBody.toString()
-        );
+            LOGGER.info("Response received from endpoint");
+            if (response.contains("must contain")
+                    || response.contains("is required")
+                    || response.contains("must be exactly")
+                    || response.contains("Card Expired")) {
 
-        LOGGER.info("Response received from endpoint");
+                statusCode = 400;
+            } else {
+                statusCode = 200;
+            }
+        } catch (Exception e) {
+            LOGGER.severe("Internal server error: " + e.getMessage());
+            response = "Internal Server Error";
+            statusCode = 500;
+        }
 
         byte[] responseBytes =
                 response.getBytes(StandardCharsets.UTF_8);
 
-        exchange.getResponseHeaders()
-                .set("Content-Type", "application/json");
+        exchange.getResponseHeaders().set("Content-Type", "application/json");
 
-        exchange.sendResponseHeaders(
-                200,
-                responseBytes.length
-        );
+        exchange.sendResponseHeaders(statusCode, responseBytes.length);
 
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(responseBytes);
