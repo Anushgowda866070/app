@@ -1,5 +1,7 @@
 package com.payment.servlet;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.payment.socket.GatewaySocketClient;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -39,15 +41,17 @@ public class Servlet implements HttpHandler {
                     requestBody.toString());
 
             LOGGER.info("Response received from endpoint");
-            if (response.contains("must contain")
-                    || response.contains("is required")
-                    || response.contains("must be exactly")
-                    || response.contains("Card Expired")) {
 
-                statusCode = 400;
-            } else {
-                statusCode = 200;
+            ObjectMapper objectMapper=new ObjectMapper();
+            JsonNode responseNode= objectMapper.readTree(response);
+            String responseCode=responseNode.path("responseCode")
+                    .asText(null);
+            if("00".equals(responseCode)){
+                statusCode=200;
+            }else{
+                statusCode=400;
             }
+
         } catch (Exception e) {
             LOGGER.severe("Internal server error: " + e.getMessage());
             response = "Internal Server Error";
