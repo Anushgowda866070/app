@@ -14,13 +14,11 @@ public class GatewaySocketClient {
 
     public String sendRequest(String request) {
 
-        LOGGER.debug("Sending request to endpoint");
+        LOGGER.debug("Sending request to Gateway");
 
-        try {
+        try (Socket socket = new Socket("localhost", 4000)){
 
-            Socket socket = new Socket("localhost", 4000);
-
-            LOGGER.info("Connected to endpoint successfully");
+            LOGGER.info("Connected to Gateway successfully");
 
             PrintWriter writer =
                     new PrintWriter(socket.getOutputStream(), true);
@@ -34,10 +32,8 @@ public class GatewaySocketClient {
             String response = reader.readLine();
 
             if(response== null ||response.isEmpty()){
-                LOGGER.warn("Received unexpected response from endpoint");
+                LOGGER.warn("Received unexpected response from Gateway");
             }
-
-            socket.close();
 
             return response;
 

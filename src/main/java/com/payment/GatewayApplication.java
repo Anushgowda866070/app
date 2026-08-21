@@ -2,9 +2,14 @@ package com.payment;
 
 import com.payment.servlet.*;
 import com.sun.net.httpserver.HttpServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.InetSocketAddress;
 
 public class GatewayApplication {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GatewayApplication.class);
 
     public static void main(String[] args) throws Exception {
 
@@ -17,7 +22,7 @@ public class GatewayApplication {
 
         server.setExecutor(null);
 
-        System.out.println("Server Started on Port 8080");
+        LOGGER.info("Server Started on Port 8080");
 
         server.start();
     }
